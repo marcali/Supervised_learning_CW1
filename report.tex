@@ -1,0 +1,544 @@
+% TODO
+% Tidy up all code
+    % Knn - DONE
+    % Ridge regression - DONE
+    % Move things out to helpers - DONE
+    % Add comments in a few places to explain what's going on - DONE
+% Try a couple of different seeds to see what gets best looking graphs
+% Need to answer some of the explaining questions - DONE (Alina to review)
+% Question 5 - put in answers as well as the summary table. Brief explanation sentence of the plot of cross validation error (plus need axis labels) - Rob - DONE
+% Question 9 - sort out summations - Alina DONE
+% Question 9b - DONE
+% Question 10 - do a better proof and/or move the hand waving to the end - Rob
+% Question 11 - part g need to write theorems and implications - Rob DONE
+% Question 11 - read through carefully checking reasoning and all equations - Rob DONE (fixed some bits, pretty confident it's ok now but worth a final re-read to check indices/x or v_r/i or i' etc...
+% Check all graph axes, fig labels - Alina (DONE except nearest neighbours) - DONE
+% Remove equation numbers - Rob done for NFL not 1-nn kernel
+% Check equation references - Rob DONE
+% Fix the headings/subheadings in the jupyter notebook to match the questions/report - Alina DONE
+
+
+% Finalise report:
+% Student numbers - both
+% Check all todos
+
+
+% Final todo:
+% Clear outputs, reset kernel, make sure all run numbers are to the correct value and run code
+% Delete all charts from overleaf so we know we're putting fresh ones in
+% Copy all charts/tables across
+% Copy those manual numbers across (question 5a,c)
+% Zip code carefully (main.ipynb and helpers only)
+
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{{booktabs}}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{bbm}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{enumitem}
+
+
+\newcommand{\myx}{x_{i}^{j}}
+\newcommand{\one}{\mathbbm{1}}
+\newcommand{\ones}[2]{\one_{\{#1\ne#2\}}}
+\newcommand{\err}[2]{\mathcal{E}_{\rho_{#1}}(#2_{#1})}
+\newcommand{\prob}[2]{\rho_#1^#2}
+\newcommand{\expectation}{\mathbb{E}_{S\sim\prob{i}{n}}}
+
+
+\title{Supervised Learning CW1}
+% \author{Robert Moss, Alina Marchenko}
+\author{Group size 2. Student numbers 23183434 and 23226377}
+
+\begin{document}
+\maketitle
+
+% \begin{abstract}
+% Your abstract.
+% \end{abstract}
+
+\section{Part I}
+\subsection{Linear Regression}
+\begin{enumerate}
+  \item Least Squares
+    \begin{enumerate}[label=\alph*.]
+      \item Plot
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.5\linewidth]{LeastSquares_1_a.png}
+            \caption{\label{fig:LeastSquares_1_a}Polynomial Bases}
+        \end{figure}
+      \item Equations
+      \begin{align*}
+            k=1, \quad y &= 2.5\\
+            k=2, \quad y &= 1.5 + 0.4x \\
+            k=3, \quad y &= 9 + -7.1x + 1.5x^2 \\
+            k=4, \quad y &= -5 + 15.17x + -8.5x^2 + 1.33x^3 \\
+      \end{align*}
+      \item Mean square error
+      \begin{align*}
+            k=1, \quad \text{mse} &= 3.25 \\
+            k=2, \quad \text{mse} &= 3.05 \\
+            k=3, \quad \text{mse} &= 0.80 \\
+            k=4, \quad \text{mse} &= 0.00 \\
+      \end{align*}
+    \end{enumerate}
+  \item Overfitting
+    \begin{enumerate}[label=\alph*.]
+      \item Polynomial fitting
+        \begin{enumerate}[label=\roman*.]
+          \item Plot of underlying sin data
+              \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.5\linewidth]{SinData_2_a_i.png}
+                \caption{\label{fig:SinData_2_a_i}Sin Data}
+              \end{figure}
+          \item Fitting the polynomial bases of dimension $k=2,5,10,14,18$
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.5\linewidth]{PolyFit_2_a_ii.png}
+                \caption{\label{fig:PolyFit_2_a_ii}Polynomial Fitting}
+            \end{figure}
+        \end{enumerate}
+      \item Log of training error vs polynomial dimension
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.5\linewidth]{MSE_training_2_b.png}
+                \caption{\label{fig:MSE_training_2_b}MSE training}
+            \end{figure}
+      \item Log of test error vs polynomial dimension
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.5\linewidth]{MSE_testing_2_c.png}
+                \caption{\label{fig:MSE_testing_2_c}MSE testing}
+            \end{figure}
+      \item Training and test error averaged over 100 runs
+        \begin{figure}[ht]
+          \centering
+          \begin{minipage}[b]{0.45\textwidth}
+            \includegraphics[width=\textwidth]{MSE_100_training_2_d.png}
+            \caption{\label{fig:MSE_100_training_2_d}MSE training}
+          \end{minipage}
+          \begin{minipage}[b]{0.45\textwidth}
+            \includegraphics[width=\textwidth]{MSE_100_testing_2_d.png}
+            \caption{\label{fig:MSE_100_testing_2_d}MSE testing}
+          \end{minipage}
+        \end{figure}
+    \end{enumerate}
+  \item Sin basis
+    \begin{enumerate}[label=\alph*.]
+  \setcounter{enumii}{1} % Make it start from (b) as we're referencing b-d from previous parts
+      \item Log of training error vs k
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.5\linewidth]{MSE_training_3_b.png}
+                \caption{\label{fig:MSE_training_3_b}MSE training}
+            \end{figure}
+      \item Log of test error vs k
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.5\linewidth]{MSE_testing_3_c.png}
+                \caption{\label{fig:MSE_testing_3_c}MSE testing}
+            \end{figure}
+      \item Training and test error averaged over 100 runs
+        \begin{figure}[ht]
+          \centering
+          \begin{minipage}[b]{0.45\textwidth}
+            \includegraphics[width=\textwidth]{MSE_100_training_3_d.png}
+            \caption{\label{fig:MSE_100_training_3_d}MSE training}
+          \end{minipage}
+          \begin{minipage}[b]{0.45\textwidth}
+            \includegraphics[width=\textwidth]{MSE_100_testing_3_d.png}
+            \caption{\label{fig:MSE_100_testing_3_d}MSE testing}
+          \end{minipage}
+        \end{figure}
+    \end{enumerate}
+\end{enumerate}
+\subsection{Filtered Boston housing and kernels}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item Baseline vs full linear regression
+        \begin{enumerate}
+            \item Naive Regression
+            \begin{table}[H]
+                \centering
+                \input{naive_regression}
+                \caption{Naive Regression}
+                \label{fig:naive_regression}
+            \end{table}
+            \item The constant function in (a) is the \textbf{mean y-value of the training data}. Detailed explanation; we're modelling
+                $$\text{SSE} = \sum_{t=1}^{m} \left( y_t - \sum_{i=1}^{k} w_i \phi_i(\mathbf{x}_t) \right)^2$$
+                if we use $\phi(\mathbf{x}_t) = 1$ and $k=1$ we're just minimising
+                $$\text{SSE} = \sum_{t=1}^{m} (y_t - w)^2$$
+                Solving analytically by differentiating with respect to $w$ and setting equals to 0 we find
+                $$w^*=\frac{1}{m}\sum_{t=1}^{m}y_t$$
+                so $w^*$ is the mean value of y. Which means our future predictions
+                $$y_i = \mathbf{w}^T\phi(\mathbf{x}_i)$$
+                reduce to just
+                $$y_i = w^*$$
+            \item Linear Regression with single attributes
+            \begin{table}[h]
+                \centering
+                \input{single_attr_regression}
+                \caption{Linear Regression with single attributes}
+                \label{fig:single_attr_regression}
+            \end{table}
+            \item Linear Regression with all attributes outperforms single attribute regressors as shown by lowest MSE on the test set.
+            \begin{table}[h]
+                \centering
+                \input{all_attrs_regression}
+                \caption{Linear Regression with all attributes}
+                \label{fig:all_attrs_regression}
+            \end{table}
+        \end{enumerate}
+
+    \end{enumerate}
+\subsection{Kernelised ridge regression}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item Kernel ridge regression
+        \begin{enumerate}
+            \item Kernel Ridge regression on the training set gives the best gamma and sigma as (for our first run with our specific given seed) of $\gamma=2^{-28}$ and $\sigma=2^{9}$.
+            \item Plot of cross-validation error, on the left we have plotted against the indices of the gamma and sigma arrays whereas on the right we have a 3D plot against the log2 of gamma and sigma. In both plots we have plotted the heatmap as the log of the cross validation error
+                \begin{figure}[H]
+                  \centering
+                  \begin{minipage}[b]{0.45\textwidth}
+                    \includegraphics[width=\textwidth]{Cross_validation_error_5_bi.png}
+                    \caption{\label{fig:Cross_validation_error_5_bi}Cross validation error heatmap}
+                  \end{minipage}
+                  \begin{minipage}[b]{0.45\textwidth}
+                    \includegraphics[width=\textwidth]{Cross_validation_error_5_bii.png}
+                    \caption{\label{fig:Cross_validation_error_5_bii}Cross validation error (3D)}
+                  \end{minipage}
+                \end{figure}
+            \item Our MSE for training and test sets for best hyperparameters were (for our first run with specific given seed) were
+            \begin{itemize}
+                \item Train mse for best gamma/sigma: 6.56
+                \item Test mse for best gamma/sigma: 15.08
+            \end{itemize}
+            \item Summary table
+            \begin{table}[H]
+                \centering
+                \input{summary_table}
+                \caption{MSE of different bases}
+                \label{fig:summarytable}
+            \end{table}
+
+        \end{enumerate}
+    \end{enumerate}
+
+\section{Part II}
+    \subsection{$k$-Nearest Neighbors}
+    \subsubsection{Generating the data}
+    \begin{enumerate}
+        \setcounter{enumi}{5}
+        \item Visualisation of an example hypothesis $h_{S,v}$
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.5\linewidth]{2_2_1_1_kNN_hypothesis.png}
+            \caption{\label{fig:2_2_1_1_kNN_hypothesis}Example hypothesis $h_{S,v}$}
+          \end{figure}
+    \end{enumerate}
+    \subsubsection{Estimated generalization error of $k$-NN as a function of $k$}
+    \begin{enumerate}
+        \setcounter{enumi}{6}
+        \item Generalisation error
+        \begin{enumerate}[label=\alph*.]
+            \item Protocol A visualisation
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.5\linewidth]{2_2_1_2_error_rate.png}
+                \caption{\label{fig:2_2_1_2_error_rate}Generalisation error}
+              \end{figure}
+            \\\\
+            If k is too low, then we are over-fitting on the training data and hence the error on test data is large as seen on the left of the graph. As k increases we have a more general fit which performs better on the test data. However, beyond the optimal k the error increases, as we are starting to over-generalize and can't capture the granular shape of the underlying distribution.
+            \\\\
+            We are also seeing a zig-zag behaviour on the left of the graph where the even dimension classifiers get a slightly worse error than the odd-dimension classifiers, this is due to needing to use a random choice to break ties however this behaviour becomes less pronounced as k increases because the chance of a tie decreases.
+        \end{enumerate}
+    \end{enumerate}
+    \subsubsection{Determine the optimal $k$ as a function of the number of training points $m$}
+    \begin{enumerate}
+        \setcounter{enumi}{7}
+        \item Optimal k as function of m
+        \begin{enumerate}[label=\alph*.]
+            \item Protocol B visualisation
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=0.5\linewidth]{2_2_1_3_optimal_k.png}
+                \caption{\label{fig:2_2_1_3_optimal_k}Optimal k per m}
+              \end{figure}
+            \item
+              The optimal k increases as the number of data points increases. For a small number of data points a lower k is better because the data points can be quite sparse and you want to capture only the local pattern whereas a large k might include points quite far away from the test point. However as seen in the previous question we can overfit for small k and s the number of data increases we can benefit from the increased amount of data by increasing k (being careful not to over generalise). However there are diminishing returns as the amount of data increases as we can see in the shape of our graph with the slope beginning to level off.
+        \end{enumerate}
+    \end{enumerate}
+
+
+\section{Part III}
+\subsection{Questions}
+\begin{enumerate}
+  \setcounter{enumi}{8 }
+  \item \textbf{Kernel modification} Consider the function \
+    \[
+    K_c(\mathbf{x}, \mathbf{z}) = c + \sum_{i=1}^n x_i z_i \quad \text{where} \quad \mathbf{x}, \mathbf{z} \in \mathbb{R}^n.
+    \]
+    \begin{enumerate}
+        \item
+            \( K_c \) is a positive semi-definite kernel for values
+                \[{c}\geq{0}\]
+
+            Proof -
+
+            For the kernel to be positive semi-definite it needs to satisfy the condition for any vector $\mathbf{v}$:
+            % \[v^T K v \geq 0 \quad (\forall v \in \mathbb{R}^n \setminus \{0\}).\] # I think this is positive-definite, not positive semi-definite so we don't need to exclude 0
+            \[\mathbf{v}^T K \mathbf{v} \geq 0 \quad (\forall \mathbf{v} \in \mathbb{R}^n).\]
+            where \( K \) is a symmetric kernel matrix (${K_{ij}} = K_c(\mathbf{x}^{(i)}, \mathbf{x}^{(j)}) = K_c(\mathbf{x}^{(j)}, \mathbf{x}^{(i)}) = K_{ji})$. Plugging given kernel function:
+            \begin{align*}
+            \mathbf{v}^T K \mathbf{v} &= \sum_{i} \sum_{j} v_i v_j K_{ij} \\
+            &= \sum_{i} \sum_{j}  v_i v_j (c + \sum_{k}x^{(i)}_k x^{(j)}_k)  \\
+            &= \sum_{i} \sum_{j} \sum_{k} v_i v_j x^{(i)}_k x^{(j)}_k + c\sum_{i} \sum_{j}  v_i v_j \\
+            &= \sum_{k} \left( \sum_{i} v_i x^{(i)}_k \right)^2 + c\left(\sum_{i} v_i\right)^2
+            \geq 0.
+            \\
+            \end{align*}
+            So $c$ has to be $\geq 0.$ for the this condition to be satisfied.
+
+        \item If $c$ is 0 we would be considering just the original feature space but for a non-zero $c$ we are effectively adding another dimension to the original feature space with a constant value ($\sqrt{c}$) across all data points (a bias term). if we don't have the $c$ then the fitted prediction hyperplane is only allowed to pass through the origin (no bias) of the space. Adding a $c$ term allows for a better fit of the data.
+        \\\\
+        Without $c$ (or with a $c$ which is too small) we risk numerical instability when inverting the kernel matrix if it happens that we have a small dot product of two data points so setting $c$ can help with the numerical instability of our solution.
+        \\\\
+        If we set $c$ far too large then we risk this constant term dominating over the actual features of the dataset (for example in the given kernel the c term would dominate over the summation).
+        \\\\
+        However, given a $c$ which is not too large or small(typically $ {0}\leq{c}\leq{1}$), the actual value of $c$ doesn't make much difference to the solution as we can just change weights to compensate.
+
+
+    % from discussion with David he agrees with you about the shifting because we can just re-learn shifted weights and the actual regression solution doesn't change much, however there's still the cases of very small and very large c where it does affect things numerically
+    % Maybe we should even remove our first point about it adding dimension to the original feature space as we're doing all this in kernel space, but I'm also sure it's correct haha
+
+    %     I think the first point is valid, I'm gonna quickly read about Homogeneous Linear Kernel and inhomogeneous one, which is apparently what this is
+    %     one is K_c=x^tz
+    %     the other one is same but with +c
+
+    % sounds good! I don't know what that means haha
+    % I'm confident on the too small/too large version of c but not on whether it affects the solution in the middle because chatGPT is arguing with me that it does
+    % David says he's going to code it up to check
+
+    % I think it doesn't affect the coefficient so in that sense it doesn't affect the solution, however basically if we don't have the c then the fitted prediction hyperplane is only allowed to pass through the origin (no bias) of the feahttps://www.overleaf.com/project/6534f5427d1b69f9e08b41adture space. Hence having term c allows for a better fit of the data (agreed, except I think it's kernel space rather than feature space? but that's splitting hairs!)
+    %yeah I thought we might do the same with the code we already have, but honestly it's not worth it
+
+    % Are you happy with what's currently written above?
+    \end{enumerate}
+    \item 1-NN with Gaussian Kernel
+    \begin{enumerate}[label=\roman*.]
+        \item We are going to argue that there exists a \textbf{sufficiently large $\beta$} which enables our linear regression to simulate a 1-NN classifier. For our trained linear classifier to simulate a 1-NN classifier we need:
+        \begin{equation*}
+            \operatorname{sign}(f(\mathbf{t})) = y_{nn}
+        \end{equation*}
+        where $y_{nn}$ is the class of $\mathbf{x}_{nn}$, which is defined as the nearest neighbour of $\mathbf{t}$ (we will refer to $_{nn}$ as the nearest neighbour throughout). We can write this statement (inserting our definition of $f$) as:
+        \begin{equation*}
+            y_{nn}\times\left[\sum\limits_{i=1}^m\alpha_{i}K_{\beta}(\mathbf{x}_i, \mathbf{t})\right] > 0
+        \end{equation*}
+        Separating out the nearest neighbour from the others and using the definition of $K_{\beta}$
+        \begin{align*}
+            y_{nn}\left[\alpha_{nn}K_{\beta}(\mathbf{x}_{nn}, \mathbf{t}) + \sum\limits_{i=1, i\ne nn}^m\alpha_{i}K_{\beta}(\mathbf{x}_i, \mathbf{t})\right] &> 0 \\
+            y_{nn}\left[\alpha_{nn}e^{-\beta||\mathbf{x}_{nn} - \mathbf{t}||^2} + \sum\limits_{i=1, i\ne nn}^m\alpha_{i}e^{-\beta||\mathbf{x_{i}} - \mathbf{t}||^2}\right] &> 0
+        \end{align*}
+        For our classifier to act as a 1-NN classifier $\text{sign}(\alpha_{nn}) = y_{nn}$ so we can multiply by $y_{nn}/\alpha_{nn}$ without modifying the inequality.
+        \begin{align*}
+            y_{nn}^2\left[1 + \sum\limits_{i=1, i\ne nn}^m\frac{\alpha_{i}}{\alpha_{nn}}e^{-\beta||\mathbf{x_{i}} - \mathbf{t}||^2 + \beta||\mathbf{x_{nn}} - \mathbf{t}||^2}\right] &> 0 \\
+            1 + \sum\limits_{i=1, i\ne nn}^m\frac{\alpha_{i}}{\alpha_{nn}}e^{-\beta(||\mathbf{x_{i}} - \mathbf{t}||^2 - ||\mathbf{x_{nn}} - \mathbf{t}||^2)} &> 0
+        \end{align*}
+        From the definition of the nearest neighbour we have:
+        \begin{align*}
+            ||\mathbf{x_{i}} - \mathbf{t}||^2 &> ||\mathbf{x_{nn}} - \mathbf{t}||^2 \quad \forall x_i \ne x_{nn}\\
+            ||\mathbf{x_{i}} - \mathbf{t}||^2 &= ||\mathbf{x_{nn}} - \mathbf{t}||^2 + \epsilon_i^2
+        \end{align*}
+        where $\epsilon_i^2$ is introduced to show the positive difference between the square distances. We assume there is only a single nearest neighbour (otherwise the question is not well defined) so $\epsilon_i^2 > 0 \: \forall x_i \ne x_{nn}$. Therefore we see
+        \begin{align}
+            1 + \sum\limits_{i=1, i\ne nn}^m\frac{\alpha_{i}}{\alpha_{nn}}e^{-\beta\epsilon_i^2} &> 0 \nonumber \\
+            \sum\limits_{i=1, i\ne nn}^m\frac{\alpha_{i}}{\alpha_{nn}}e^{-\beta\epsilon_i^2} &> -1
+            \label{eq:kernel_inequality}
+        \end{align}
+        To reduce this further we need to understand how the ratio of alphas changes as we increase $\beta$. First we look at the kernel matrix $K$ which is defined by
+        \begin{align*}
+            K &= \begin{pmatrix}
+                K_{\beta}(\mathbf{x}_1, \mathbf{x}_{1}) & \cdots & K_{\beta}(\mathbf{x}_1, \mathbf{x}_m) \\
+                \vdots & \ddots & \vdots \\
+                K_{\beta}(\mathbf{x}_m, \mathbf{x}_1) & \cdots & K_{\beta}(\mathbf{x}_m, \mathbf{x}_m)
+                \end{pmatrix} \\
+                &= \begin{pmatrix}
+                1 & \cdots & K_{\beta}(\mathbf{x}_1, \mathbf{x}_m) \\
+                \vdots & \ddots & \vdots \\
+                K_{\beta}(\mathbf{x}_m, \mathbf{x}_1) & \cdots & 1
+                \end{pmatrix}
+        \end{align*}
+        Each element is described by
+        \begin{equation*}
+            K_{\beta}(\mathbf{x}_i, \mathbf{x}_{j}) = e^{-\beta||\mathbf{x}_{i} - \mathbf{x_j}||^2}
+        \end{equation*}
+        Assuming there is no duplicate data (which could be removed in pre-processing)  $\mathbf{x}_{i} \ne \mathbf{x_j}$ so as $\beta$ increases we can see that the off-diagonal terms decrease such that at the limit $\beta \rightarrow \infty$ the kernel matrix $K$ becomes the identity matrix $I$.
+        \\\\
+        Now if we use the definition of the regression coefficients we see that (using $I^{-1}=I$):
+        \begin{align*}
+            \mathbf{\alpha} &= K^{-1}\mathbf{y} \\
+            \mathbf{\alpha} &\rightarrow I^{-1}\mathbf{y} \\
+                            &\rightarrow \mathbf{y} \\
+            \alpha_i &\rightarrow y_i \\
+            \frac{\alpha_i}{\alpha_{nn}} &\rightarrow \frac{y_i}{y_{nn}} = \pm 1 \\
+            \left|\frac{\alpha_i}{\alpha_{nn}}\right| &\rightarrow 1
+        \end{align*}
+
+        So we have shown that as $\beta$ becomes larger the left hand side of \eqref{eq:kernel_inequality} will be dominated by the exponential term $e^{-\beta\epsilon_i^2}$ so will decrease. Therefore for a sufficiently large $\beta$ the inequality is valid, thus proving there's a sufficiently large $\beta$ which can act as a 1-NN classifier.
+        \\\\
+        \textbf{Bonus}
+        We can give an expression for a conservative limit by taking the worst case scenario, that is assume all other points have the opposite class to the nearest neighbour class so \eqref{eq:kernel_inequality} becomes
+        \begin{align*}
+            - \sum\limits_{i=1, i\ne nn}^m\left|\frac{\alpha_i}{\alpha_{nn}}\right|e^{-\beta\epsilon_i^2} &> -1 \nonumber \\
+            \sum\limits_{i=1, i\ne nn}^m\left|\frac{\alpha_{max}}{\alpha_{nn}}\right|e^{-\beta\epsilon_{2nn}^2} &< 1
+        \end{align*}
+        Where we have used the conservative limit of the smallest possible $\epsilon_i^2$ which is that of the second nearest neighbour $x_{2nn}$ and set $\alpha_i = \alpha_{max}$ where $\alpha_{max} = \text{max}_i \alpha_i$. Solving we have a conservative limit of:
+        \begin{equation*}
+            \beta > \frac{\text{ln}\left[\left|\frac{\alpha_{max}}{\alpha_{nn}}\right|(m-1)\right]}{\epsilon_{2nn}^2}
+        \end{equation*}
+
+    \end{enumerate}
+
+    \item No free lunch theorem
+    \begin{enumerate}[label=\alph*.]
+    \item Given the misclassification risk with respect to $\rho$ we can say that for any $i$:
+
+    \begin{equation*}
+        \err{i}{f} = \int\limits_{\mathcal{X}\times\mathcal{Y}}\ones{f_i(x)}{y}d\rho_{i}(x,y)
+    \end{equation*}
+
+    The term $\ones{f_i(x)}{y}$ inside the integral is only non-zero if $f_i(x)\ne y$ however $\rho_i = 0$ if $y\ne f_i(x)$ therefore the whole integral is zero. Essentially $f_i$ has been defined such that either the error is 0 when $f_i(x) = y$ or the probability of having $f_i(x) \ne y$ is 0.
+    \\\\
+    The probability is positive $\rho(x,y)\ge 0$ and so is the $\one$ function so we know $\err{{}}{f} \ge 0$, and as we've shown $\err{i}{f} = 0$ we know it is the infimum (e.g. $\err{i}{f} = \inf_{f:\mathcal{X}\rightarrow\mathcal{Y}}\err{}{f}=0$).
+    \item
+    \begin{equation*}
+        \expectation\mathcal{E}_{\rho_i}(A(S)) = \int\prob{i}{n}(s)\mathcal{E}_{\rho_i}(A(S))ds
+    \end{equation*}
+    However each sample is equally likely so $\rho^n_i(s) = 1/{|C^n|} = 1/k$, therefore
+    \begin{equation*}
+        \expectation\mathcal{E}_{\rho_i}(A(S)) = \frac{1}{k}\sum\limits_{j=1}^{k}\mathcal{E}_{\rho_i}(A(S_j^i))
+    \end{equation*}
+    Now we use the fact that $\max _{\ell} \alpha_{\ell} \geq \frac{1}{m} \sum_{\ell=1}^m\alpha_{\ell} \geq \min _{\ell} \alpha_{\ell}$. Using the first part of this inequality and setting $\alpha_{\ell} = \expectation\mathcal{E}_{\rho_i}(A(S))$ and $m=T$, we get
+    \begin{align*}
+        \max_{i=1,\dots,T}\expectation\mathcal{E}_{\rho_i}(A(S)) &\ge \frac{1}{T}\sum\limits_{i=1}^{T}\frac{1}{k}\sum\limits_{j=1}^{k}\mathcal{E}_{\rho_i}(A(S_j^i)) \\
+        &\ge \frac{1}{k}\sum\limits_{j=1}^{k}\frac{1}{T}\sum\limits_{i=1}^{T}\mathcal{E}_{\rho_i}(A(S_j^i))
+    \end{align*}
+    where all we did in the second step is re-order the sums. Now we can use the second part of the inequality (but this time using $m=k$ and $\alpha_{\ell} = \frac{1}{T}\sum\limits_{i=1}^{T}\mathcal{E}_{\rho_i}(A(S_j^i))$) to get
+    \begin{equation}
+        \max_{i=1,\dots,T} \expectation\mathcal{E}_{\rho_i}(A(S)) \ge \min_{j=1,\dots,k}\frac{1}{T}\sum\limits_{i=1}^{T}\mathcal{E}_{\rho_i}(A(S_j^i))
+        \label{eqn:b}
+    \end{equation}
+    \item We take the definition of misclassification excess risk.
+    \begin{equation*}
+        \mathcal{E}_{\rho_i}(A(S_j^i)) = \frac{1}{|C|}\sum\limits_{x\in C}\ones{A(S_j^i)(x)}{f_i(x)}
+    \end{equation*}
+    Using the fact that the cardinality of $|C| = 2n$ and separating the sum into two terms we can lower bound the misclassification risk.
+
+    \begin{align*}
+        \mathcal{E}_{\rho_i}A(S_j^i) &= \frac{1}{|C|}\sum\limits_{x\in C}\ones{A(S_j^i)(x)}{f_i(x)}\\
+        &=\frac{1}{2n} \sum\limits_{x\in C\setminus{S_{j}^{'}}}\ones{A(S_j^i)(x)}{f_i(x)} + \frac{1}{2n}\sum\limits_{v_r\in S_j^{'}}\ones{A(S_j^i)(v_r)}{f_i(v_r)}\\
+        &\ge\frac{1}{2n}\sum\limits_{v_r\in S_j^{'}}\ones{A(S_j^i)(v_r)}{f_i(v_r)}\\
+        &\ge\frac{1}{2p}\sum\limits_{v_r\in S_j^{'}}\ones{A(S_j^i)(v_r)}{f_i(v_r)}
+    \end{align*}
+
+    Note that in the last step we've used the fact that $|S_j|\le|S_j^'|$ so $p\ge m$. Now taking the sum over both sides, swapping the order of sums and reusing the given fact $\frac{1}{m} \sum_{\ell=1}^m\alpha_{\ell} \geq \min _{\ell} \alpha_{\ell}$ we see
+
+    \begin{align}
+        \frac{1}{T}\sum\limits_{i=1}^{T}\mathcal{E}_{\rho_i}(A(S_j^i)) &\ge \frac{1}{T}\sum\limits_{i=1}^{T}\frac{1}{2p}\sum\limits_{v_r\in S_j^{'}}\ones{A(S_j^i)(v_r)}{f_i(v_r)}{} \nonumber\\
+                    &\ge \frac{1}{2p}\sum\limits_{v_r\in S_j^{'}}\frac{1}{T}\sum\limits_{i=1}^{T}\ones{A(S_j^i)(v_r)}{f_i(v_r)}{} \nonumber \\
+                    &\ge \frac{1}{2}\:\min\limits_{r=1,\dots, p}\:\frac{1}{T}\sum\limits_{i=1}^{T}\ones{A(S_j^i)(v_r)}{f_i(v_r)}{}
+        \label{eqn:c}
+    \end{align}
+
+    \item As the classifier is binary we can imagine a particular point $x=v_r$ where the $T$ functions can be split into two sets of functions of size $T/2$, with all functions in one set having $f(v_r)=1$ and in the other set $f(v_r)=0$. These two sets of functions are identical over the same space of $C\setminus\{v_r\}$ so each function $f_i$ in the first set can have a corresponding partner $f_i^'$ in the second set where $f_i(x)\ne f_{i'}(x)$ if and only $x=v_r$ so we have $T/2$ such pairs.
+    \\\\
+    Now consider the expression
+    \begin{equation*}
+        \ones{A(S_j^i)(x)}{f_i(x)} + \one_{\{A(S_j^i)(x)=f_{i}(x)\}}= 1
+    \end{equation*}
+    This is clearly true for all $x$ given this is a binary classification setting either the first term or the second term must be 1 and the other must be 0. We can now use the fact that $S_j^i = S_j^{i'}$ (because $f_i$ and $f_{i'}$ only differ on $v_r$ which is outside of $S_j$), and consider $x=v_r$ so $f_i(v_r)\ne f_{i'}(v_r)$ to see
+    \begin{equation}
+        \ones{A(S_j^i)(v_r)}{f_i(v_r)} + \ones{A(S_j^{i'})(v_r)}{f_{i'}(v_r)}{} = 1
+        \label{eqn:d_ones}
+    \end{equation}
+    Now taking this result we can separate the sum over all $T$ functions into a sum over $T/2$ pairs:
+    \begin{align}
+        \frac{1}{T}\sum\limits_{i=1}^{T}\ones{A(S_j^i)(v_r)}{f_i(v_r)} &= \frac{1}{T}\sum\limits_{i=1}^{T/2}\left[\ones{A(S_j^i)(v_r)}{f_i(v_r)} + \ones{A(S_j^{i'})(v_r)}{f_{i'}(v_r)}{}\right] \nonumber \\
+        &=\frac{1}{T}\times \frac{T}{2} \nonumber \\
+        &=\frac{1}{2} \label{eqn:d}
+    \end{align}
+
+    \item Defining $Y=1-Z$ (so $\mathbb{E}(Y)=1-\mathbb{E}(Z)$) and putting Y into Markov's inequality we get
+    \begin{align*}
+        \mathbb{P}(Y\ge a)&\le\frac{\mathbb{E}(Y)}{a} \\
+        \mathbb{P}(1-Z\ge a)&\le\frac{1-\mathbb{E}(Z)}{a} \\
+        \mathbb{P}(Z\le 1-a)&\le\frac{1-\mu}{a}
+    \end{align*}
+    Where we have simply rearranged the condition in the probability on the left hand side. Probabilities sum to 1 so we can replace the left hand side with $(1-\mathbb{P}(Z>1-a))$, rearranging yields
+    \begin{align}
+        \mathbb{P}(Z>1-a) &\ge 1 - \frac{1-\mu}{a} \nonumber \\
+                          &\ge \frac{\mu-(1-a)}{a} \label{eqn:e}
+    \end{align}
+    \item We combine the previous results in the following way. First putting \eqref{eqn:d} into \eqref{eqn:c} yields:
+    \begin{equation*}
+        \frac{1}{T}\sum\limits_{i=1}^{T}\mathcal{E}_{\rho_i}(A(S_j^i)) \ge \frac{1}{4}
+    \end{equation*}
+    Putting this into \eqref{eqn:b} obtains
+    \begin{equation*}
+        \max_{i=1,\dots,T} \expectation\mathcal{E}_{\rho_i}(A(S)) \ge \frac{1}{4}
+    \end{equation*}
+    Considering that $\rho_i$ is a distribution over $\mathcal{C} \times \mathcal{Y}$ and $C \subset \mathcal{X}$, there therefore exists a distribution $\rho$ over $\mathcal{X} \times \mathcal{Y}$ such that
+    \begin{equation*}
+        \mathbb{E}_{S\sim\prob{{}}{n}}\mathcal{E}_{\rho}(A(S)) \ge \frac{1}{4}
+    \end{equation*}
+    
+    Finally inserting this result into \eqref{eqn:e} (picking $a=7/8$ and setting $Z=\mathcal{E}_{\rho}(A(S))$) we see that
+    \begin{align*}
+        \mathbb{P}_{S\sim\prob{{}}{n}}\left(\mathcal{E}_{\rho}(A(S))>\frac{1}{8}\right) &\ge \frac{\mathbb{E}_{S\sim\prob{{}}{n}}\mathcal{E}_{\rho}(A(S)) - (1-7/8)}{7/8}\\
+        &\ge \frac{8\times\frac{1}{4} - 1}{7} \\
+        &\ge \frac{1}{7}
+    \end{align*}
+    \item Discussion
+    \begin{enumerate}
+        \item  The No-Free-Lunch theorem states that there is no universal learner, that is for any learning algorithm there exists a task on which it fails, even though there is another algorithm which can succeed on that task.
+        \item No, the the space $\mathcal{Y}^\mathcal{X}$ is not learnable. We show this by substituting our results from above which we can do as $C \subset \mathcal{X}$ so we know $\mathcal{Y}^\mathcal{C} \subset \mathcal{Y}^\mathcal{X}$ and $|\mathcal{X}| > |2n|$. First using the result from (a) ($\err{i}{f} = \inf_{f:\mathcal{X}\rightarrow\mathcal{Y}}\err{}{f}=0$) and rearranging:
+        \begin{align*}
+            \mathbb{P}_{S\sim\prob{{}}{n}}\left(\mathcal{E}_{\rho}(A(S))\le\epsilon\right) &\ge 1 - \delta \\
+            1 - \mathbb{P}_{S\sim\prob{{}}{n}}\left(\mathcal{E}_{\rho}(A(S))>\epsilon\right) &\ge 1 - \delta \\
+            \mathbb{P}_{S\sim\prob{{}}{n}}\left(\mathcal{E}_{\rho}(A(S))>\epsilon\right) &\le\delta \\
+        \end{align*}
+        we can choose $\epsilon = 1/8$ and $\delta <1/7$ so we have:
+        \begin{equation}
+            \mathbb{P}_{S\sim\prob{{}}{n}}\left(\mathcal{E}_{\rho}(A(S))>\frac{1}{8}\right) < \frac{1}{7}
+        \end{equation}
+        Thus contradicting our no free lunch theorem, so we have shown the space is not learnable.
+        \item The NFL theorem means that there is no universal learner, e.g. no one algorithm works best on every problem, which means that we need to tailor our algorithm to the specific problem for the best results. We must incorporate prior knowledge of the task at hand into our choice of algorithm by choosing a particular hypothesis class (rather than having the set of all possible functions $\mathcal{Y}^C$ as we have considered above).
+        \\\\
+        When considering the size of the hypothesis class to choose we face a bias-complexity tradeoff; we have a balance between the approximation error (the minimum error possible from a predictor in the hypothesis class) and the estimation error (the difference between the empirical risk and the approximation error).
+        \\\\
+        Put simply, if we consider a too large hypothesis class we might overfit, but too small and we might underfit.
+    \end{enumerate}
+\end{enumerate}
+\end{enumerate}
+\end{document}
